@@ -19,62 +19,65 @@ STEP-5: Display the cipher text obtained above.
 ```
 #include <stdio.h>
 #include <string.h>
-
-char* encrypt(char text[], int s) {
-    static char result[100];
-    int i;
-    
-    for (i = 0; i < strlen(text); i++) {
-        char char_ = text[i];
-        
-        if (char_ >= 'A' && char_ <= 'Z') {
-            result[i] = (char)(((int)char_ + s - 65) % 26 + 65);
-        } else if (char_ >= 'a' && char_ <= 'z') {
-            result[i] = (char)(((int)char_ + s - 97) % 26 + 97);
-        } else {
-            result[i] = char_;
-        }
-    }
-    result[i] = '\0';
-    return result;
-}
-
-char* decrypt(char text[], int s) {
-    static char result[100];
-    int i;
-    
-    for (i = 0; i < strlen(text); i++) {
-        char char_ = text[i];
-        
-        if (char_ >= 'A' && char_ <= 'Z') {
-            result[i] = (char)(((int)char_ - s - 65 + 26) % 26 + 65);
-        } else if (char_ >= 'a' && char_ <= 'z') {
-            result[i] = (char)(((int)char_ - s - 97 + 26) % 26 + 97);
-        } else {
-            result[i] = char_;
-        }
-    }
-    result[i] = '\0';
-    return result;
-}
+#include <ctype.h>
 
 int main() {
-    char text[100];
-    int s;
-    scanf("%s",text);
-    scanf("%d",&s);
-    printf("Text: %s\n", text);
-    printf("Shift: %d\n", s);
-    printf("Cipher: %s\n", encrypt(text, s));
-    printf("Decrypted: %s\n", decrypt(encrypt(text, s), s));
+    char plain[10], cipher[10];
+    int key, i, length;
+
+    // Input for plaintext
+    printf("\n Enter the plain text: ");
+    scanf("%9s", plain); // Limiting input to avoid overflow
+
+    // Input for the key
+    printf("\n Enter the key value: ");
+    scanf("%d", &key);
+
+    length = strlen(plain);
+
+    printf("\n \n \t PLAIN TEXT: %s", plain);
+    printf("\n \n \t ENCRYPTED TEXT: ");
     
+    // Encryption process
+    for (i = 0; i < length; i++) {
+        cipher[i] = plain[i] + key;
+
+        // Adjust if beyond 'Z' or 'z'
+        if (isupper(plain[i]) && (cipher[i] > 'Z'))
+            cipher[i] -= 26;
+        if (islower(plain[i]) && (cipher[i] > 'z'))
+            cipher[i] -= 26;
+
+        printf("%c", cipher[i]);
+    }
+    cipher[length] = '\0'; // Null-terminating the cipher text
+
+    // Decryption process
+    printf("\n \n \t AFTER DECRYPTION: ");
+    for (i = 0; i < length; i++) {
+        plain[i] = cipher[i] - key;
+
+        // Adjust if below 'A' or 'a'
+        if (isupper(cipher[i]) && (plain[i] < 'A'))
+            plain[i] += 26;
+        if (islower(cipher[i]) && (plain[i] < 'a'))
+            plain[i] += 26;
+
+        printf("%c", plain[i]);
+    }
+    plain[length] = '\0'; // Null-terminating the plain text
+
+    // getchar(); // Use this if you want to pause the program
     return 0;
 }
+
+
 ```
 
 
 ## OUTPUT:
-![Screenshot 2024-09-04 083524](https://github.com/user-attachments/assets/7cc3a135-471f-4bc3-ad66-2f1d0f77310a)
+![image](https://github.com/user-attachments/assets/01af209e-ad2f-4a8f-b8b8-b98a01be6dbb)
+
 
 
 ## RESULT :
